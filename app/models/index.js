@@ -1,9 +1,18 @@
 const dbConfig = require("../config/db.config");
 const {Sequelize, DataTypes}= require("sequelize");
+const fs = require('fs');
+const rdsCa = fs.readFileSync(__dirname + '/amazon-rds-ca-cert.pem');
+
   
   const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
+  dialectConfig:{
+    ssl:{
+      rejectUnauthorized:true,
+      ca:[rdsCa]
+    }
+  },
   operatorsAliases: 0,
   schema:dbConfig.SCHEMA,
   pool: {
